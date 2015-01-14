@@ -58,60 +58,39 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
-
+int a[33000];
+bool b[33000];
+map<int,int> maps;
 int main()
-
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+	int t;
+	int n;
+	cin>>t;
+	while(t--)
 	{
-	cin>>x>>y;
-
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+		cin>>n;
+		int k = 1<<n;
+		//cout<<k;
+		for(int i =0;i<k;i++)
+			{cin>>a[i];}
+		sort(a,a+k);
+		int counti =0;
+		for(int i =1;i<k;i++)
+		maps[a[i]] = i;
+		for(int i =1;i<k;i++)
+		{
+			if(n== counti) break;
+			if(b[i] == false) {counti++; cout<<a[i]<<" ";}
+			if(b[i] == true) continue;
+			for(int j = i;j>0;j--)
+			{
+				int tmp =maps[a[i]+a[j]];
+				int sum = a[i] + a[j];
+				//b[tmp] = true;
+				while(a[tmp] == sum){b[tmp] = true; tmp--;}
+			}
+		} cout<<endl; maps.clear(); CLR(a);CLR(b);
 	}
 }
+
+

@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -58,60 +59,53 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
 
-int main()
-
+int a[1010],b;
+int dp[1010];
+pair<int,int> c[1010];
+bool comp(const pair<int,int>& u,const pair<int,int>&  v)
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+	if(u.first == v.first)
+		return u.second<v.second;
+	return u.first<v.first;
+}
+int main()
+{
+	int  t,n;
+	cin>>t;
+	while(t--)
 	{
-	cin>>x>>y;
-
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+		cin>>n;
+		for(int i =0;i<n;i++)
+		{
+			cin>>a[i];
+		}
+		for(int i =0;i<n;i++)
+		{
+			cin>>b;
+			c[i] = make_pair(a[i],b);
+		}
+		sort(c,c+n,comp);
+		fill(dp,dp+n,1);
+		for(int i =1;i<n;i++)
+		{
+			for(int j = 0;j<i;j++)
+			{
+				if(c[i].second >= c[j].second && dp[i] < dp[j] +1)
+				{
+					dp[i] = dp[j] + 1;
+				}
+			}
+		}
+		int max = -INT_MAX;
+		for(int i =0;i<n;i++)
+		{
+			if(max < dp[i]) max = dp[i];
+		}
+		cout<<max<<endl;
+		CLR(c);
+		CLR(a);
 	}
 }
+
+

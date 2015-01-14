@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -24,10 +25,10 @@
 #define sil(x) scanf("%llu",&x)
 #define sd(x) scanf("%ld",&x)
 #define in(s) cin>>s
-#define FOR(i,a,b) for( typeof(a) i=(a); i<(b); ++i) // exclusive for
-#define FORR(i,a,b) for( typeof(a) i=(a-1) ; i>=(b); --i)
-#define REP(k,a,b) for(typeof(a) k=(a); k <= (b); ++k) // inclusive for
-#define REPR(i,a,b) for( typeof(a) i=(a) ; i>=(b); --i)
+#define FOR(a) for( int i= 0 ; i<(a); ++i) // exclusive for
+#define FORR(a) for( int i=(a-1) ; i>=(0); --i)
+#define REP(a) for(int k=0; k <= (a); ++k) // inclusive for
+#define REPR(a) for( int i=(a) ; i>=(0); --i)
 #define ALL(c) (c).begin(), (c).end()
 #define PB push_back
 #define MP make_pair
@@ -58,60 +59,40 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
-
+char a[20];
 int main()
-
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+	int t;
+	cin>>t;
+	for(int j =1;j<=t;j++)
 	{
-	cin>>x>>y;
+		cin>>a;
+		int len = strlen(a);
+		int start = a[0] -'0';
+		int maxi = -INT_MIN,mini = INT_MAX;
+		int indi,indj;
+		for(int i=1;i<len;i++)
+		{
+			if(mini>=a[i]-'0' && a[i] !='0') {mini = a[i]-'0'; indi = i;}
+			if(maxi<=a[i]-'0') {maxi = a[i]-'0'; indj =i;}
+		}
+		char smallest[20],largest[20];
+		strcpy(smallest,a);
+		strcpy(largest,a);
+		if(start>mini)
+		{
+			smallest[0] = mini + '0';
+			smallest[indi] = a[0];
+		}
+			if(start<maxi)
+		{
+			largest[0] = maxi + '0';
+			largest[indj] = a[0];
 
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
+		}
+		printf("Case #%d: %s %s\n",j,smallest,largest);
 
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
 	}
 }
+
+

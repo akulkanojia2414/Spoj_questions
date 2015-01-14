@@ -58,60 +58,41 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
-
+int a,b,t;
+int c[10000];
+int carry;
+int ans[10][4010];
 int main()
+{	int temp,ind;
+for(int k =2;k<=9;k++)
+{	CLR(c); ind=0; c[ind] = k; ans[k][1] =k;
+	for(int i =2;i<4001;i++)
+		{carry =0;
+			for(int j=0;j<=ind;j++)
+			{
+				temp = c[j]*k + carry;
+				c[j] = temp%10;
+				carry = temp /10;
+	//			cout<<temp<<" "<<carry<<endl;
+				if(carry>0&&j==ind) {c[j+1] = carry; ind++;break;}
+			}int count =0;
+		for(int j = ind ;j>=0;j--)
+		{
+				count+=c[j];
+		}
+		ans[k][i] = count;
+		}
 
-{
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+}
+	cin>>t;
+	for(int i =1;i<=t;i++)
 	{
-	cin>>x>>y;
+		cin>>a>>b;
+		if(b==0){cout<<"Case "<<i<<": "<<1<<endl; continue;}
+		if(a==1) {cout<<"Case "<<i<<": "<<1<<endl; continue;}
+		cout<<"Case "<<i<<": "<<ans[a][b]<<endl;
 
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
 	}
 }
+
+

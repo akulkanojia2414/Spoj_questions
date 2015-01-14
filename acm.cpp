@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -58,60 +59,69 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
-
+int a[101][101],b[250][250];ll c[250][250];
 int main()
-
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+	int t,n,m,M,N,i,j;
+	cin>>t;
+	while(t--)
 	{
-	cin>>x>>y;
+		cin>>n>>m;
+		N = 2*n - 1;
+		M = 2*m -1;
+		for(i=0;i<n;i++)
+		{
+			for(j=0;j<m;j++)
+			{
+					cin>>a[i][j];
+			}
+		}
+		for(i=0;i<N;i++)
+		{
+			for( j =0;j<M;j++)
+			{
+				if(i%2==1||j%2==1)
+				b[i][j] = 0;
+				else b[i][j] = a[i/2][j/2];
 
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+			}
+		}
+		ll sum ,max;
+		int k =0;
+		for(i=0;i<N;i++)
+		{max = -10000000;
+			for(j=0;j<M;j++)
+			{max = -10000000;
+				sum =0; k=1;
+				if((i+j)%2==0)
+				{sum+= b[i][j];
+					while((i-k)>=0 && (i+k)<N && (j-k)>=0 && (j+k)<M)
+					{
+						sum += b[i-k][j-k] + b[i-k][j+k] + b[i+k][j-k] + b[i+k][j-k];
+						if(sum>max) max = sum;
+						k++;
+					}
+				}
+				c[i][j] = max;
+			}
+		} max = -INT_MAX;
+		for(i=0;i<N;i++)
+		{
+			for(j=0;j<M;j++)
+			{cout<<b[i][j]<<" ";
+				if(c[i][j] >max ) max = c[i][j];
+			}cout<<endl;
+		}
+		for(i=0;i<N;i++)
+		{
+			for(j=0;j<M;j++)
+			{cout<<c[i][j]<<" ";
+				//if(c[i][j] >max ) max = c[i][j];
+			}cout<<endl;
+		}
+		cout<<max<<endl;
+		CLR(a);CLR(b);CLR(c);
 	}
 }
+
+

@@ -56,62 +56,28 @@ typedef unsigned long long ull;
 typedef long long ll;
 typedef long int li;
 
-
+#define mod 1000000007
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
-
-int main()
-
+ull pow(ull n)
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+    ull x=1,p=2;
+    while(n)
+    {
+        if(n&1)
+            x=(x*p)%mod;
+        p=(p*p)%mod;
+        n>>=1;
+    }
+    return x;
+}
+int main()
+{
+	ull n;
+	ull ans;
+	while(cin>>n)
 	{
-	cin>>x>>y;
-
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+		ans = ((pow(n)+3)*333333336)%mod;
+		cout<<ans<<endl;
 	}
 }
+

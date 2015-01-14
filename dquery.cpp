@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -58,17 +59,9 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
+int a[30010];
+int tree[30010];
+int MaxVal;
 int read(int idx){
 	int sum = 0;
 	while (idx > 0){
@@ -77,41 +70,102 @@ int read(int idx){
 	}
 	return sum;
 }
-
-int main()
-
-{
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
-	{
-	cin>>x>>y;
-
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+void update(int idx ,int val){
+	if(idx == INT_MAX) return;
+	while (idx <= MaxVal){
+		tree[idx] += val;
+		idx += (idx & -idx);
 	}
 }
+bool integer[1000011];
+int PI[1000011];
+pair<int,pair<int,int> > queries[200001];
+int ans[200001];
+int lit[30010];
+int get()
+{
+  register char c;
+  while(c=gc(),(c<'0'||c>'9')&&(c!='-'));
+  bool flag=(c=='-');
+  if(flag)
+    c=gc();
+  int x=0;
+  while(c>='0'&&c<='9')
+    {
+      x=x*10+c-48;
+      c=gc();
+    }
+  return flag?-x:x;
+}
+void output(int x)
+{
+  if(x<0)
+    {
+      putchar_unlocked('-');
+      x=-x;
+    }
+  int len=0,data[10];
+  while(x)
+    {
+      data[len++]=x%10;
+      x/=10;
+    }
+  if(!len)
+    data[len++]=0;
+  while(len--)
+    putchar_unlocked(data[len]+48);
+  putchar_unlocked('\n');
+}
+int main()
+{
+	int n,i,j,k,q,x,y;
+	n = get();
+	MaxVal = n;
+	for(i=1;i<=n;i++)
+	{
+		a[i] = get();
+		if(integer[a[i]] == false)
+		{
+			update(i,1);
+		}
+		integer[a[i]] = true;
+	}
+	q = get();
+	for(i =0;i<q;i++)
+	{
+		queries[i].first= get();
+		queries[i].second.first = get();
+		queries[i].second.second = i;
+	}
+	sort(queries,queries + q);
+	for(i=n;i>0;i--)
+	{
+		if(PI[a[i]] != 0)
+		lit[i] = PI[a[i]];
+		else lit[i] = INT_MAX;
+		PI[a[i]] = i;
+	}
+	j=0;
+	while(queries[j].first == 1)
+	{
+		ans[queries[j].second.second]  = read(queries[j].second.first);
+		j++;
+	}
+	for( i =2;i<= n && j<q;i++)
+	{
+		update(i-1,-1);
+		update(lit[i-1],1);
+		while(queries[j].first == i && j<q)
+		{
+			ans[queries[j].second.second]  = read(queries[j].second.first);
+			j++;
+		}
+	}
+	for(i=0;i<q;i++)
+	{
+		output(ans[i]);
+	}
+}
+
+
+

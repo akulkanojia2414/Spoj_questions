@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -58,60 +59,65 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
+int tree[100010];
+queue<pair<int,int> > q;
+bool visited[100010];
 
+
+vector<pair<int,int> > u[100010];
+vector<pair<int,int> > :: iterator it;
 int main()
-
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+	int n,x,d,tmp1,tmp2;
+	cin>>n;
+	//MaxVal = n;
+	for(int i =0;i<n-1;i++)
 	{
-	cin>>x>>y;
+		cin>>tmp1>>tmp2>>d;
+		u[tmp1].PB(MP(tmp2,i));
+		u[tmp2].PB(MP(tmp1,i));
+		tree[i] = d;
+	}
+	int que;
+	cin>>que;
+	for(int i =0;i<que;i++)
+	{
+		cin>>x;
+		if(x==1)
+		{
+			cin>>tmp1>>tmp2;
+			tree[tmp1-1] = tmp2;
+		}
+		if(x==2)
+		{
+				cin>>tmp1>>tmp2;
+				q.push(MP(tmp1,0));
+				visited[tmp1] = true;
+				int sum ;
+			//	cout<<tree[2];
+				while(!q.empty())
+				{
+					pair<int,int> temp = q.front();
+					q.pop();
+				//	cout<<temp.first<<" "<<temp.second<<endl;
+					if(temp.first == tmp2)
+					{
+						sum = temp.second;
+						while(!q.empty()) q.pop();
+						break;
+					}
 
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+					for(it = u[temp.first].begin();it!=u[temp.first].end();it++)
+					{
+						if(visited[(*it).first] == false)
+						q.push(MP((*it).first, tree[(*it).second]+temp.second));
+						visited[(*it).first] = true;
+					}
+				}
+				CLR(visited);
+				cout<<sum<<endl;
+		}
 	}
 }
+
+

@@ -58,60 +58,45 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
 
 int main()
-
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+	int n,k;
+	cin>>n>>k;
+	int a[n];
+	for(int i =0;i<n;i++)
 	{
-	cin>>x>>y;
-
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+		cin>>a[i];
+	}
+	vector<pair<int,int> > vec;
+	int min ,max,j,indn,indx;
+	for(j=0;j<k;j++)
+	{
+		min = a[0];
+		max = a[0];
+		indn =0; indx=0;
+		for(int i =0;i<n;i++)
+		{
+			if(a[i]>max) {max = a[i]; indx = i;}
+			if(a[i]<min) {min = a[i]; indn = i;}
+		}//cout<<max<<" "<<min<<endl;
+		if((max-min)==0||(max-min)==1) break;
+		vec.push_back(make_pair(indx,indn));
+		a[indx]--; a[indn]++;
+	}max = a[0] ; min = a[0];
+	for(int i =0;i<n;i++)
+		{
+			if(a[i]>max) {max = a[i]; }
+			if(a[i]<min) {min = a[i]; }
+		}
+	cout<<max-min<<" "<<j<<endl;
+	while(!vec.empty())
+	{
+		pair<int,int> p;
+		p = vec.back();
+		vec.pop_back();
+		cout<<p.first+1<<" "<<p.second+1<<endl;
 	}
 }
+
+

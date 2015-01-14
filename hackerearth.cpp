@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -18,7 +19,6 @@
 #include <stack>
 
 
-#define abs(x) ((x)>=0? (x):(-x))
 #define gc getchar_unlocked
 #define s(x) scanf("%d",&x)
 #define sil(x) scanf("%llu",&x)
@@ -58,60 +58,52 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
-
-int main()
-
+int abs(int a)
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+	if(a>=0)
+		return a;
+	else return -a;
+}
+int a[1000000];
+int main()
+{
+	int t,n,sum;
+	cin>>t;
+	while(t--)
 	{
-	cin>>x>>y;
-
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+		sum=0;
+		cin>>n;
+		for(int i =0;i<n;i++)
+		{
+			cin>>a[i];
+		}
+		int temp = a[0],temp1=0,j=0;
+		for(int i =1;i<n;i++)
+		{
+			if(temp-a[i]>0)
+			{
+				temp1 = (temp1+ temp-a[i])%1000000007;
+			}
+			else
+			{
+				temp = a[i];
+				j=i;
+				sum=(sum+temp1)%1000000007;
+				temp1=0;
+			}
+			if(i==(n-1))
+			{
+				if(temp1>0)
+				{
+					int sm = temp - a[i];
+					temp1 = (temp1-sm*(i-j))%1000000007;
+					sum=(sum+temp1)%1000000007;
+					temp1=0;
+				}
+			}
+		}
+		cout<<sum<<endl;
 	}
 }
+
+

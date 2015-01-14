@@ -58,60 +58,52 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
 
-int main()
-
+#define mod 1000000007
+long long pow(int a,int b,int ni)
 {
+	if(b==0) return 1;
+	if(b==1) return a%ni;
+	long long temp = pow(a,b/2,ni)%ni;
+	if(b%2==0) return (temp*temp)%ni;
+	else return (temp*temp*a)%ni;
+}int mul_inv(int a, int b)
+{
+	int b0 = b, t, q;
+	int x0 = 0, x1 = 1;
+	if (b == 1) return 1;
+	while (a > 1) {
+		q = a / b;
+		t = b, b = a % b, a = t;
+		t = x0, x0 = x1 - q * x0, x1 = t;
+	}
+	if (x1 < 0) x1 += b0;
+	return x1;
+}
 
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+ll ncr[100010];
+int main()
+{
+	ncr[0] =1;
+	int invmod;
+	for(int i =1;i<1010;i++)
 	{
-	cin>>x>>y;
+		invmod = mul_inv(i,(mod-1)/2);
+		if(invmod<0) invmod+=(mod-1)/2;
+		//cout<<invmod<<endl;
+		ncr[i] = ((ncr[i-1]*(4*i-2))*invmod)%(mod-1);
+		//cout<<i<<endl;
+	}
+	cout<<ncr[1001];
+	int t,a,b,n;
+	cin>>t;
+	while(t--)
+	{
+		cin>>a>>b>>n;
+		long long res,comb;
 
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+		//res = pow()
 	}
 }
+
+

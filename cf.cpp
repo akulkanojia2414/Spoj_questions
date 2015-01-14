@@ -24,10 +24,10 @@
 #define sil(x) scanf("%llu",&x)
 #define sd(x) scanf("%ld",&x)
 #define in(s) cin>>s
-#define FOR(i,a,b) for( typeof(a) i=(a); i<(b); ++i) // exclusive for
-#define FORR(i,a,b) for( typeof(a) i=(a-1) ; i>=(b); --i)
-#define REP(k,a,b) for(typeof(a) k=(a); k <= (b); ++k) // inclusive for
-#define REPR(i,a,b) for( typeof(a) i=(a) ; i>=(b); --i)
+#define FOR(a) for( int i= 0 ; i<(a); ++i) // exclusive for
+#define FORR(a) for( int i=(a-1) ; i>=(0); --i)
+#define REP(a) for(int k=0; k <= (a); ++k) // inclusive for
+#define REPR(a) for( int i=(a) ; i>=(0); --i)
 #define ALL(c) (c).begin(), (c).end()
 #define PB push_back
 #define MP make_pair
@@ -58,60 +58,62 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
 
+int a[310];
+int b[310],pos[310];
+char Mat[310][310];
 int main()
-
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+	int n ;
+	cin>>n;
+	for(int i = 1;i<=n;i++)
 	{
-	cin>>x>>y;
-
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+		cin>>a[i];
+		b[i] = a[i];
+		pos[a[i]] = i;
 	}
+	sort(b+1,b+n+1);
+	for(int i =1;i<=n;i++)
+	{
+		for(int j =1;j<=n;j++)
+		{
+			cin>>Mat[i][j];
+		}
+	}
+	int j,temp,position,tmp;
+	for(int i =1;i<=n;i++)
+	{
+		j = i;
+		temp = b[i];
+		position = pos[temp];
+		if(position == i) continue;
+		bool yes = true;
+		while(a[i] != temp && yes)
+		{ j = i;
+		cout<<"YO"<<endl;
+		while(Mat[position][j] != '1'  )
+		{cout<<"YO"<<endl;
+			if(j== position)
+			{
+				yes = false;
+				break;
+			}
+
+			j++;
+		}
+		if(Mat[position][j] == '1')
+			{
+			pos[a[j]] = position;
+			pos[a[position]] = j;
+			tmp = a[j];
+			a[j] = a[position];
+			a[position] = tmp;
+
+			}
+		}
+	}
+	for(int i =1;i<=n;i++)
+		cout<<a[i]<<" ";
 }
+
+

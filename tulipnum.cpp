@@ -24,10 +24,10 @@
 #define sil(x) scanf("%llu",&x)
 #define sd(x) scanf("%ld",&x)
 #define in(s) cin>>s
-#define FOR(i,a,b) for( typeof(a) i=(a); i<(b); ++i) // exclusive for
-#define FORR(i,a,b) for( typeof(a) i=(a-1) ; i>=(b); --i)
-#define REP(k,a,b) for(typeof(a) k=(a); k <= (b); ++k) // inclusive for
-#define REPR(i,a,b) for( typeof(a) i=(a) ; i>=(b); --i)
+#define FOR(a) for( int i= 0 ; i<(a); ++i) // exclusive for
+#define FORR(a) for( int i=(a-1) ; i>=(0); --i)
+#define REP(a) for(int k=0; k <= (a); ++k) // inclusive for
+#define REPR(a) for( int i=(a) ; i>=(0); --i)
 #define ALL(c) (c).begin(), (c).end()
 #define PB push_back
 #define MP make_pair
@@ -58,60 +58,74 @@ typedef long int li;
 
 
 using namespace std;
-int a[200001];
-int b[200001];
-int tree[200001];
-int n,x,y,m,i,j,temp;
-ll inv_count,t;
-void update(int idx ,int val){
-	while (idx <= n){
-		tree[idx] += val;
-		idx += (idx & -idx);
-	}
-}
-int read(int idx){
-	int sum = 0;
-	while (idx > 0){
-		sum += tree[idx];
-		idx -= (idx & -idx);
-	}
-	return sum;
-}
-
-int main()
-
+int get()
 {
-
-	cin>>n>>m;
-	for( i =1;i<=n;i++)
-	{cin>>a[i]; b[i] = a[i];}
-	sort(b+1,b+n+1);
-for( i = 1; i <=n; i++) {
-         int rank = int(lower_bound(b+1, b +1+ n, a[i]) - (b+1));
-         a[i] = rank+1 ; cout<<a[i]<< " ";
-      }
-
-	while(m--)
+  register char c;
+  while(c=gc(),(c<'0'||c>'9')&&(c!='-'));
+  bool flag=(c=='-');
+  if(flag)
+    c=gc();
+  int x=0;
+  while(c>='0'&&c<='9')
+    {
+      x=x*10+c-48;
+      c=gc();
+    }
+  return flag?-x:x;
+}
+void output(int x)
+{
+  if(x<0)
+    {
+      putchar_unlocked('-');
+      x=-x;
+    }
+  int len=0,data[10];
+  while(x)
+    {
+      data[len++]=x%10;
+      x/=10;
+    }
+  if(!len)
+    data[len++]=0;
+  while(len--)
+    putchar_unlocked(data[len]+48);
+  putchar_unlocked('\n');
+}
+int a[100011];
+int ans[100011];
+int u ,v;
+int main()
+{
+	int t,n ,q;
+	t = get();
+	for(int j =1;j<=t;j++)
 	{
-	cin>>x>>y;
-
-	 temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
-	inv_count=0;
-	for(int i = n ; i > 0; --i) {
-          t = read(a[i]-1);
-         inv_count += t;
-         update(a[i], 1);
-		cout<<inv_count<<endl;
-		for(int i =1;i<=n;i++) cout<<tree[i]<<" ";
-      }
-	for(int i =1;i<=n;i++) cout<<tree[i];
-	CLR(tree);
-	cout<<inv_count<<endl;
-
- temp = a[x];
-	a[x] = a[y];
-	a[y]= temp;
+		n = get();
+		q = get();
+		a[1]  = get();
+		ans[0] = 0;
+		ans[1]=1;
+		for(int i =2;i<=n;i++)
+		{
+			a[i] = get();
+			if(a[i] == a[i-1])
+			{
+				ans[i] = ans[i-1];
+			}
+			else
+			{
+				ans[i] =ans[i-1] +1;
+			}
+		}
+		//for(int i =0;i<=n;i++) cout<<ans[i]<<endl;
+		printf("Case %d:\n",j);
+		FOR(q)
+		{
+			u = get();
+			v = get();
+			output(ans[v] - ans[u] +1);
+		}
 	}
 }
+
